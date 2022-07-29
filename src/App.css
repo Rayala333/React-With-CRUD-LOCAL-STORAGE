@@ -1,5 +1,13 @@
 th,
-td {
+td,table {
   border: 1px solid black;
   text-align: center;
+  border-collapse: collapse;
+ padding: 1rem;
+ margin:2rem;
+ cursor: pointer;
+};
+button{
+  width: 100%;
+  background-color: brown;
 }

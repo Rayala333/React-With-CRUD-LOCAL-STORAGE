@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 
+
+const mydata = ()=>{
+  const fanialData = localStorage.getItem("userData");
+
+  if(fanialData){
+    return JSON.parse(fanialData)
+  }else{
+    return []
+  }
+}
+
 const Crud = () => {
+
   const [data, setData] = useState({
     username: "",
     password: "",
@@ -8,39 +20,57 @@ const Crud = () => {
     phonenumber: "",
   });
 
-  const [local, setLocal] = useState([]);
-
-  console.log(local);
+  const [local, setLocal] = useState(mydata());
 
   const changeHandler = (event) => {
     setData({ ...data, [event.target.name]: [event.target.value] });
   };
 
   const submitHandler = (event) => {
+   
     event.preventDefault();
-    // console.log(data);
-    try {
-      let userInputData = localStorage.getItem("userData");
-      setValue(userInputData);
-      //   userInputData.push(data);
-      if (userInputData) {
-        return JSON.parse(userInputData);
-        // return userInputData.push(data);
-      } else {
-        localStorage.setItem("userData", JSON.stringify(data));
-      }
-    } catch (error) {
-      return error;
-    }
-    const setValue = (userInputData) => {
-      try {
-        localStorage.setItem("userData", JSON.stringify(userInputData));
-        console.log(userInputData, "SetValues");
-      } catch (error) {
-        return error;
-      }
-    };
+    setLocal([...local,data])
   };
+  
+
+  useEffect(()=>{
+
+    localStorage.setItem('userData',JSON.stringify(local))
+    
+   
+  },[local])
+
+  
+  const deleteHandleer =(index)=>{
+    alert("are yousure want to delete")
+    const filterData = local.filter((element)=>{
+      return local.indexOf(element) !== index
+    })
+
+    console.log(filterData)
+    setLocal(filterData)
+  }
+
+
+  const editHandker = (user,index)=>{
+    console.log(user)
+    const edit = local
+    console.log(edit[index],"edit")
+    
+    setData(
+      {
+        key:index,
+        username: edit[index].username,
+        password: edit[index].password,
+        email: edit[index].email,
+        phonenumber:edit[index].phonenumber,
+
+      }
+      
+    )
+  }
+
+  
 
   return (
     <>
@@ -59,6 +89,7 @@ const Crud = () => {
           type="text"
           id="username"
           name="username"
+          value={data.username}
           onChange={changeHandler}
         ></input>
         <label htmlFor="password">Enter Password</label>
@@ -66,6 +97,7 @@ const Crud = () => {
           type="password"
           id="password"
           name="password"
+          value={data.password}
           onChange={changeHandler}
         ></input>
         <label htmlFor="email">Enter Email</label>
@@ -73,51 +105,46 @@ const Crud = () => {
           type="email"
           id="email"
           name="email"
+          value={data.email}
           onChange={changeHandler}
         ></input>
         <label htmlFor="phonenumber">Enter Phonenumber</label>
         <input
           type="number"
           name="phonenumber"
+          value={data.phonenumber}
           id="phonenumber"
           onChange={changeHandler}
         ></input>
         <button>Submit</button>
       </form>
-
-      <table style={{ width: "70%", border: "1px solid black" }}>
-        <tr>
-          <th>Username</th>
-          <th>password</th>
-          <th>email</th>
-          <th>phonenumber</th>
-          <th>Actions</th>
-        </tr>
-        {local.length > 0 ? (
-          <h1> "Greater than zero" </h1>
-        ) : (
-          <h1> "less than zero" </h1>
-        )}
-        {/* {local.length !== 0
-
-          ? local.map((ele, ind) => {
-              return (
-                <tr>
-                  <td>{ele.username}</td>
-                  <td>{ele.password}</td>
-                  <td>{ele.email}</td>
-                  <td>{ele.phonenumber}</td>
-                  <td>
-                    <button onClick={editHandler}>Edit</button>
-                  </td>
-                  <td>
-                    <button onClick={deleteHandler(ind)}>Delete</button>
-                  </td>
-                </tr>
-              );
-            })
-          : ""} */}
-      </table>
+{local.length <= 0 ? <h1>Enter User Details</h1>:
+      <table>
+        <thead>
+          <tr>
+            <th>username</th>
+            <th>password</th>
+            <th>email</th>
+            <th>phonenumber</th>
+            <th colSpan={2}>actons</th>
+          </tr>
+        </thead>
+        <tbody>
+        {
+          local.map((user,index)=>(
+            <tr key={index}>
+              <td>{user.username}</td>
+              <td>{user.password}</td>
+              <td>{user.email}</td>
+              <td>{user.phonenumber}</td>
+              <td onClick={()=>editHandker(user,index)}>Edit</td>
+              <td  onClick={()=>deleteHandleer(index)}>Delete</td>
+            </tr>
+          ))
+        }
+        </tbody>
+        <button onClick={()=>setLocal([])} >RemoveAll</button>
+      </table>}
     </>
   );
 };
