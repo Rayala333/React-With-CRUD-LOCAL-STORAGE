@@ -14,6 +14,7 @@ const mydata = ()=>{
 const Crud = () => {
 
   const [data, setData] = useState({
+    id:new Date().getTime().toString(),
     username: "",
     password: "",
     email: "",
@@ -29,7 +30,21 @@ const Crud = () => {
   const submitHandler = (event) => {
    
     event.preventDefault();
-    setLocal([...local,data])
+
+     if(data === ""){
+      alert("No Data")
+     }else{
+      setLocal([...local,data])
+      
+     }
+     setData({
+    id:new Date().getTime().toString(),
+    username: "",
+    password: "",
+    email: "",
+    phonenumber: "",
+     })
+     
   };
   
 
@@ -37,14 +52,14 @@ const Crud = () => {
 
     localStorage.setItem('userData',JSON.stringify(local))
     
-   
   },[local])
 
   
-  const deleteHandleer =(index)=>{
+  const deleteHandleer =(id)=>{
     alert("are yousure want to delete")
     const filterData = local.filter((element)=>{
-      return local.indexOf(element) !== index
+      // return local.indexOf(element) !== index
+      return id !== element.id
     })
 
     console.log(filterData)
@@ -52,21 +67,34 @@ const Crud = () => {
   }
 
 
-  const editHandker = (user,index)=>{
-    console.log(user)
-    const edit = local
-    console.log(edit[index],"edit")
+
+  const editHandker = (id)=>{
+    // console.log(user)
+    // const edit = local
+    // console.log(edit[index],"edit")
+    
+    // setData(
+    //   {
+    //     key:index,
+    //     username: edit[index].username,
+    //     password: edit[index].password,
+    //     email: edit[index].email,
+    //     phonenumber:edit[index].phonenumber,
+    //   }
+      
+    // )
+    let newedit = local.find((element)=>{
+      return id === element.id
+    })
+    console.log(newedit)
     
     setData(
       {
-        key:index,
-        username: edit[index].username,
-        password: edit[index].password,
-        email: edit[index].email,
-        phonenumber:edit[index].phonenumber,
-
+        username:newedit.username,
+        password:newedit.password,
+        email:newedit.email,
+        phonenumber:newedit.phonenumber,
       }
-      
     )
   }
 
@@ -133,17 +161,19 @@ const Crud = () => {
         {
           local.map((user,index)=>(
             <tr key={index}>
+              <td>{user.id}</td>
               <td>{user.username}</td>
               <td>{user.password}</td>
               <td>{user.email}</td>
               <td>{user.phonenumber}</td>
-              <td onClick={()=>editHandker(user,index)}>Edit</td>
-              <td  onClick={()=>deleteHandleer(index)}>Delete</td>
+              <td onClick={()=>editHandker(user.id)}>Edit</td>
+              <td  onClick={()=>deleteHandleer(user.id)}>Delete</td>
             </tr>
           ))
         }
         </tbody>
         <button onClick={()=>setLocal([])} >RemoveAll</button>
+        
       </table>}
     </>
   );
