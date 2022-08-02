@@ -7,7 +7,8 @@ td,table {
  margin:2rem;
  cursor: pointer;
 };
-button{
-  width: 100%;
+.button{
+  max-width: 100%;
+  padding: 70px;
   background-color: brown;
 }

@@ -14,7 +14,6 @@ const mydata = ()=>{
 const Crud = () => {
 
   const [data, setData] = useState({
-    id:new Date().getTime().toString(),
     username: "",
     password: "",
     email: "",
@@ -22,28 +21,45 @@ const Crud = () => {
   });
 
   const [local, setLocal] = useState(mydata());
+  const [update,setUpdate] = useState(true)
+  const [EditItem,setEditItem] = useState(null)
+  // console.log(EditItem)
 
   const changeHandler = (event) => {
     setData({ ...data, [event.target.name]: [event.target.value] });
   };
+  let {username} = {...data} 
 
   const submitHandler = (event) => {
    
     event.preventDefault();
-
-     if(data === ""){
-      alert("No Data")
-     }else{
+    
+    if(!data.username && !data.password && !data.email && !data.phonenumber){
+        alert("No Data")
+      }
+      else if(EditItem !== null){
+        console.log("elseif")
+        local.map((element)=>{
+          if(EditItem){
+            console.log("inside")
+            return {...element,username}
+          }
+          console.log(element)
+          return element
+        })
+      }
+     else{
       setLocal([...local,data])
-      
+      console.log("else")
      }
-     setData({
-    id:new Date().getTime().toString(),
-    username: "",
-    password: "",
-    email: "",
-    phonenumber: "",
-     })
+    //  setData({
+    // username: "",
+    // password: "",
+    // email: "",
+    // phonenumber: "",
+    //  })
+    // setData({ })
+     setUpdate(true)
      
   };
   
@@ -55,20 +71,20 @@ const Crud = () => {
   },[local])
 
   
-  const deleteHandleer =(id)=>{
+  const deleteHandleer =(index)=>{
     alert("are yousure want to delete")
     const filterData = local.filter((element)=>{
-      // return local.indexOf(element) !== index
-      return id !== element.id
+      return local.indexOf(element) !== index
+      // return id !== element.id
     })
 
-    console.log(filterData)
+    // console.log(filterData)
     setLocal(filterData)
   }
 
 
 
-  const editHandker = (id)=>{
+  const editHandker = (index)=>{
     // console.log(user)
     // const edit = local
     // console.log(edit[index],"edit")
@@ -84,9 +100,9 @@ const Crud = () => {
       
     // )
     let newedit = local.find((element)=>{
-      return id === element.id
+      return local.indexOf(element) === index
     })
-    console.log(newedit)
+    // console.log(newedit,"Edit")
     
     setData(
       {
@@ -96,6 +112,9 @@ const Crud = () => {
         phonenumber:newedit.phonenumber,
       }
     )
+
+    setEditItem(index)
+    setUpdate(false)
   }
 
   
@@ -144,12 +163,16 @@ const Crud = () => {
           id="phonenumber"
           onChange={changeHandler}
         ></input>
-        <button>Submit</button>
+        {update ? <button>Submit</button>:<button>Update</button>}
+        
       </form>
+
+
 {local.length <= 0 ? <h1>Enter User Details</h1>:
       <table>
         <thead>
           <tr>
+          <th>S.No</th>
             <th>username</th>
             <th>password</th>
             <th>email</th>
@@ -161,19 +184,19 @@ const Crud = () => {
         {
           local.map((user,index)=>(
             <tr key={index}>
-              <td>{user.id}</td>
+              <td>{index}</td>
               <td>{user.username}</td>
               <td>{user.password}</td>
               <td>{user.email}</td>
               <td>{user.phonenumber}</td>
-              <td onClick={()=>editHandker(user.id)}>Edit</td>
-              <td  onClick={()=>deleteHandleer(user.id)}>Delete</td>
+              <td onClick={()=>editHandker(index)}>Edit</td>
+              <td  onClick={()=>deleteHandleer(index)}>Delete</td>
             </tr>
           ))
         }
+        <tr><td colSpan={7}>
+        <button onClick={()=>setLocal([])} className="button" >RemoveAll</button></td></tr>
         </tbody>
-        <button onClick={()=>setLocal([])} >RemoveAll</button>
-        
       </table>}
     </>
   );
