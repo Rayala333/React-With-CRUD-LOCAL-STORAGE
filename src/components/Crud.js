@@ -13,7 +13,12 @@ const mydata = ()=>{
 
 const Crud = () => {
 
-  const [data, setData] = useState('');
+  const [data, setData] = useState({
+    username:"",
+    password:"",
+    email:"",
+    phonenumber:""
+  });
 
   const [local, setLocal] = useState(mydata());
   const [update,setUpdate] = useState(true)
@@ -28,45 +33,52 @@ const Crud = () => {
     event.preventDefault();
     try{
 
-      if(!data){
+      if(!data.username && !data.password && !data.email && !data.phonenumber){
         alert("No Data")
       }
-      else if (data){
+      else if (data && !update){
         setLocal(
-          local.map((element)=>{
-            if(element.id === EditItem){
-              console.log("inside")
-              return {...element, username:data.username,
-                                  password:data.password,
-                                  email:data.email,
-                                  phonenumber:data.phonenumber}
+          local.map((element,index)=>{
+            if(index === EditItem){
+              // return {...element, username:data.username,
+              //                     password:data.password,
+              //                     email:data.email,
+              //                     phonenumber:data.phonenumber}
+              return {...element , username:data.username,
+                                    password:data.password,
+                                    email:data.email,
+                                    phonenumber:data.phonenumber}
             }
             return element
           })
         )
+        setUpdate(true)
+        setData({
+          username:'',
+          password:"",
+          email:"",
+          phonenumber:""
+         })
       }
       else{
-      let newdata = {id:new Date().getTime().toString(),
-                    username:data.username,
-                    password:data.password,
-                    email:data.email,
-                    phonenumber:data.phonenumber}
+      // let newdata = {id:new Date().getTime().toString(),
+      //               username:data.username,
+      //               password:data.password,
+      //               email:data.email,
+      //               phonenumber:data.phonenumber}
       
-      setLocal([...local,newdata])
+      setLocal([...local,data])
+      setData({
+        username:'',
+        password:"",
+        email:"",
+        phonenumber:""
+       })
      }
       
     }catch(err){
       console.log(err.message)
     }
-    
-     setData({
-      username:'',
-      password:"",
-      email:"",
-      phonenumber:""
-     })
-    
-     setUpdate(true)
      
   };
   
@@ -89,7 +101,7 @@ const Crud = () => {
 
 
 
-  const editHandker = (id)=>{
+  const editHandker = (index)=>{
     // console.log(user)
     // const edit = local
     // console.log(edit[index],"edit")
@@ -105,8 +117,8 @@ const Crud = () => {
       
     // )
     let newedit = local.find((element)=>{
-      // return local.indexOf(element) === index
-      return element.id === id
+      return local.indexOf(element) === index
+      // return element.id === id
     })
     // console.log(newedit,"Edit")
     
@@ -119,7 +131,7 @@ const Crud = () => {
       }
     )
 
-    setEditItem(id)
+    setEditItem(index)
     setUpdate(false)
   }
 
@@ -195,7 +207,7 @@ const Crud = () => {
               <td>{user.password}</td>
               <td>{user.email}</td>
               <td>{user.phonenumber}</td>
-              <td onClick={()=>editHandker(user.id)}>Edit</td>
+              <td onClick={()=>editHandker(index)}>Edit</td>
               <td  onClick={()=>deleteHandleer(index)}>Delete</td>
             </tr>
           ))
