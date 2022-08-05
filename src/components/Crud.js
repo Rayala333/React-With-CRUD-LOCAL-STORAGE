@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
+import TextField from '@mui/material/TextField';
 
+// const mydata = ()=>{
+//   const fanialData = localStorage.getItem("userData");
 
-const mydata = ()=>{
-  const fanialData = localStorage.getItem("userData");
-
-  if(fanialData){
-    return JSON.parse(fanialData)
-  }else{
-    return []
-  }
-}
+//   if(fanialData){
+//     return JSON.parse(fanialData)
+//   }else{
+//     return []
+//   }
+// }
 
 const Crud = () => {
 
@@ -20,7 +20,9 @@ const Crud = () => {
     phonenumber:""
   });
 
-  const [local, setLocal] = useState(mydata());
+  const [local, setLocal] = useState([]);
+
+  console.log(local)
   const [update,setUpdate] = useState(true)
   const [EditItem,setEditItem] = useState(null)
 
@@ -81,6 +83,20 @@ const Crud = () => {
     }
      
   };
+
+  useEffect(()=>{
+
+  const mydata = ()=>{
+  const fanialData = localStorage.getItem("userData");
+      if(fanialData){
+        setLocal(JSON.parse(fanialData))
+      }else{
+        setLocal([])
+      }
+    }
+    mydata()
+
+  },[])
   
 
   useEffect(()=>{
@@ -146,41 +162,34 @@ const Crud = () => {
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
+          margin: "1rem",
         }}
         onSubmit={submitHandler}
       >
-        <label htmlFor="username">Enter Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={data.username}
-          onChange={changeHandler}
-        ></input>
-        <label htmlFor="password">Enter Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={data.password}
-          onChange={changeHandler}
-        ></input>
-        <label htmlFor="email">Enter Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={data.email}
-          onChange={changeHandler}
-        ></input>
-        <label htmlFor="phonenumber">Enter Phonenumber</label>
-        <input
-          type="number"
-          name="phonenumber"
-          value={data.phonenumber}
-          id="phonenumber"
-          onChange={changeHandler}
-        ></input>
+        <TextField id="username" label="Enter Username" 
+                                  variant="outlined"
+                                  name="username"
+                                  value={data.username}
+                                  onChange={changeHandler} sx={{margin:"1rem"}}/>
+        
+        <TextField id="password" label="Enter Password" 
+                                  variant="outlined"
+                                  name="password"
+                                  value={data.password}
+                                  onChange={changeHandler} sx={{margin:"1rem"}}/>
+        
+        <TextField id="email" label="Enter Email" 
+                                  variant="outlined"
+                                  name="email"
+                                  value={data.email}
+                                  onChange={changeHandler} sx={{margin:"1rem"}}/>
+        
+        <TextField id="phonenumber" label="Enter Phonenumber" 
+                                  variant="outlined"
+                                  name="phonenumber"
+                                  value={data.phonenumber}
+                                  onChange={changeHandler} sx={{margin:"1rem"}}/>
+        
         {update ? <button>Submit</button>:<button>Update</button>}
         
       </form>
