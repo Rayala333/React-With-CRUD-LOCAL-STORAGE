@@ -23,7 +23,7 @@ const Crud = () => {
   const [local, setLocal] = useState([]);
 
   console.log(local)
-  const [update,setUpdate] = useState(true)
+  const [update,setUpdate] = useState(false)
   const [EditItem,setEditItem] = useState(null)
 
   const changeHandler = (event) => {
@@ -38,14 +38,10 @@ const Crud = () => {
       if(!data.username && !data.password && !data.email && !data.phonenumber){
         alert("No Data")
       }
-      else if (data && !update){
+      else if (data && update){
         setLocal(
           local.map((element,index)=>{
             if(index === EditItem){
-              // return {...element, username:data.username,
-              //                     password:data.password,
-              //                     email:data.email,
-              //                     phonenumber:data.phonenumber}
               return {...element , username:data.username,
                                     password:data.password,
                                     email:data.email,
@@ -54,7 +50,7 @@ const Crud = () => {
             return element
           })
         )
-        setUpdate(true)
+        setUpdate(false)
         setData({
           username:'',
           password:"",
@@ -70,6 +66,7 @@ const Crud = () => {
       //               phonenumber:data.phonenumber}
       
       setLocal([...local,data])
+        
       setData({
         username:'',
         password:"",
@@ -148,7 +145,7 @@ const Crud = () => {
     )
 
     setEditItem(index)
-    setUpdate(false)
+    setUpdate(true)
   }
 
   
@@ -190,7 +187,7 @@ const Crud = () => {
                                   value={data.phonenumber}
                                   onChange={changeHandler} sx={{margin:"1rem"}}/>
         
-        {update ? <button>Submit</button>:<button>Update</button>}
+        {!update ? <button>Submit</button>:<button>Update</button>}
         
       </form>
 
